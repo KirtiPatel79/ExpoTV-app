@@ -18,6 +18,14 @@
       ]
     ],
     "name": "MyTVProject",
-    "slug": "MyTVProject"
+    "slug": "MyTVProject",
+    "extra": {
+      "eas": {
+        "projectId": "ef87e37c-fce0-47b5-86f1-d03ad11dd780"
+      }
+    },
+    "android": {
+      "package": "com.kpatelx.MyTVProject"
+    }
   }
 }
