@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Dimensions, SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview";
+import YoutubePlayer from 'react-native-youtube-iframe';
 import axios from "axios";
 
 export default function App() {
@@ -12,7 +13,12 @@ export default function App() {
     const fetchYoutubeId = async () => {
       try {
         const response = await axios.get(
-          "https://yoururl.com/fetch_id",//it will give you youtube id
+          "https://lethalxvision.com/ytlive.php?fetch_id",
+          {
+            headers: {
+              "User-Agent": "", // Set empty User-Agent
+            },
+          }
         );
         setYoutubeId(response.data.youtubeId);
         console.log("YouTube ID:", response.data.youtubeId);
@@ -31,26 +37,19 @@ export default function App() {
     return () => clearTimeout(timeoutId);
   }, []);
 
+  const { height,width } = Dimensions.get("window"); // Get device height
+console.log(height,width);
+
   return (
     <View style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#3498db" />
       ) : (
-        <WebView
-          style={styles.video}
-          source={{
-            uri: `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1`,
-          }}
-          javaScriptEnabled={true}
-          cacheEnabled={true}
-          domStorageEnabled={true}
-          injectedJavaScript={`
-            const style = document.createElement('style');
-            style.innerHTML = '.yt-uix-sessionlink { display: none !important; }';
-            document.head.appendChild(style);
-          `}
-          mediaPlaybackRequiresUserAction={false}
-          userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"//added useragent because in android webkit doesn't allowing it to
+        <YoutubePlayer
+        videoId={youtubeId}
+        height={height}
+        width={width}
+        play={true}
         />
       )}
     </View>
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "#000",
   },
   video: {
     alignSelf: "center",
